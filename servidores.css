@@ -1,0 +1,108 @@
+/* Estilos CSS (servidores.css) */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    display: grid;
+    grid-template-columns: minmax(200px, 250px) minmax(200px, 250px) 1fr;
+    height: 100vh;
+}
+.channelCreate{
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centramos verticalmente los elementos en el sidebar */
+    align-items: center; /* Centramos horizontalmente los elementos en el sidebar */
+    margin-left:40px;
+    
+}
+
+.servers, .channels, .chat {
+    padding: 20px;
+    border-right: 1px solid #ccc;
+    overflow-y: auto;
+}
+
+.servers {
+    background-color: #36393f;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+}
+
+.servers button, .channels button, .channelCreate {
+    background-color: #7289da;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-bottom: 10px;
+}
+
+.server-buttons-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.sidebar {
+    padding: 20px;
+    background-color: #f5f5f5;
+    display: flex; /* Agregamos flexbox al sidebar */
+    flex-direction: column; /* Establecemos dirección vertical para los elementos en el sidebar */
+}
+
+.channels {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centramos verticalmente los elementos en el sidebar */
+    align-items: center; /* Centramos horizontalmente los elementos en el sidebar */
+    
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: #fff;
+    width: 300px;
+    margin: 100px auto;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+/* Estilos para el formulario del modal */
+.modal-content h2 {
+    margin-top: 0;
+}
+
+.modal-content form label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.modal-content form input {
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.modal-content form button {
+    background-color: #7289da;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 10px;
+}

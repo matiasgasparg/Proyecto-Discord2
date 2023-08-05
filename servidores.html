@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Discord 2</title>
+    <link rel="stylesheet" href="servidores.css">
+</head>
+<body>
+    <div class="container">
+        <div class="servers" id="serverList">
+            <!-- Contenedor para los botones de los servidores -->
+            <div class="server-buttons-container">
+                <!-- Listado de servidores -->
+            </div>
+            <!-- Botón "Crear servidor nuevo" dentro del contenedor de servidores -->
+            <button class="sv-item" id="createServerButton">Crear servidor nuevo</button>
+            <button class="sv-item" id="searchButton">Buscar servidor</button>
+        </div>
+    
+        <!-- Columna contigua a los servidores -->
+        <div class="sidebar" style="display: none;">        
+            <div class="channels" id="channelList">
+                <!-- Listado de canales del servidor seleccionado -->
+ 
+            </div>
+            <button class="channelCreate" id="channelCreate">Crear canal nuevo</button>
+        </div>
+    
+        <div class="chat" id="chatMessages">
+            <!-- Listado de mensajes del canal seleccionado -->
+            <!-- Cuadro de texto para escribir un nuevo mensaje -->
+        </div>
+    </div>
+    <div id="createServerModal" class="modal">
+        <div class="modal-content">
+            <h2>Crear servidor nuevo</h2>
+            <form id="serverForm">
+                <label for="serverName">Nombre:</label>
+                <input type="text" id="serverName" required>
+                <label for="serverDescription">Descripcion:</label>
+                <input type="text" id="serverDescription" required>
+                <br>
+
+                <button type="submit">Crear</button>
+                <button type="button" id="closeModalButton">Cancelar</button>
+            </form>
+        </div>
+    </div>
+    <div id="createChannelModal" class="modal">
+        <div class="modal-content">
+            <h2>Nombre:</h2>
+            <form id="channelForm">
+            <input type="text" id="channelName" required>
+            <br>
+            <button type="submit">Crear</button>
+            <button type="button" id="closeChannelModalButton">Cancelar</button>
+            </form>
+            <!-- Formulario para crear un nuevo canal -->
+            <!-- ... (código del formulario) -->
+        </div>
+    </div>
+    <script src="servidores.js"></script>
+</body>
+</html>
