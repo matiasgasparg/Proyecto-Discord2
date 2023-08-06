@@ -29,6 +29,7 @@ class DiscordApp {
             this.closeChannelModal();
 
         });
+        
 
         const idUsuario = localStorage.getItem('idUsuario');
         console.log("ID del usuario:", idUsuario);
@@ -63,6 +64,13 @@ class DiscordApp {
             console.log("Botón 'Cancelar' clickeado");
             this.closeModal();
         });
+        this.channelList.addEventListener('click', (event) => {
+            if (event.target.classList.contains('channel-item')) {
+                const channelId = event.target.getAttribute('data-channel-id');
+                this.cargarMensajesCanal(channelId);
+            }
+        });
+        
 
         this.serverForm.addEventListener('submit', (event) => {
             event.preventDefault();
@@ -82,10 +90,49 @@ class DiscordApp {
             this.crearChannel(channelName);
         
             });
+            this.channelList.addEventListener('click', (event) => {
+                if (event.target.classList.contains('channel-item')) {
+                    const channelId = event.target.getAttribute('data-channel-id');
+                    this.cargarMensajesCanal(channelId);
+                }
+            });
     }
         
 
-
+    async cargarMensajesCanal(idCanal) {
+        try {
+            const response = await fetch(`http://127.0.0.1:5000/canal/${idCanal}`);
+            if (!response.ok) {
+                throw new Error('Error al obtener los mensajes del canal');
+            }
+            const mensajes = await response.json();
+    
+            // Limpiar la lista de mensajes
+            const messagesList = document.getElementById('messagesList');
+            messagesList.innerHTML = '';
+    
+            if (mensajes.length === 0) {
+                const noMessagesMessage = document.createElement('div');
+                noMessagesMessage.textContent = 'No hay mensajes en este canal';
+                messagesList.appendChild(noMessagesMessage);
+            } else {
+                // Mostrar los mensajes en la lista
+                mensajes.forEach((mensaje) => {
+                    const messageItem = document.createElement('div');
+                    messageItem.classList.add('message-item');
+                    messageItem.textContent = mensaje.mensaje; // Aquí se ajusta a mensaje.mensaje
+                    messagesList.appendChild(messageItem);
+                });
+            }
+    
+            // Mostrar la columna sidebar2 con los mensajes del canal
+            const sidebar2 = document.querySelector('.sidebar2');
+            sidebar2.style.display = 'block';
+        } catch (error) {
+            console.error('Error al cargar mensajes del canal:', error);
+        }
+    }
+    
     async crearServidor(serverName, serverDescription) {
         const idUsuario = localStorage.getItem('idUsuario');
         const url = `http://127.0.0.1:5000/users/${idUsuario}/servers`;
@@ -242,15 +289,18 @@ class DiscordApp {
         } else {
             // Mostrar los canales en la lista
             canales.forEach((canal) => {
+
                 const channelItem = document.createElement('button');
                 channelItem.classList.add('channel-item');
                 channelItem.textContent = canal.nombre.trim();
+                channelItem.setAttribute('data-channel-id', canal.idCanal); // Asignar el ID del canal aquí
                 this.channelList.appendChild(channelItem);
             });
+    
+            // Mostrar el sidebar con los canales del servidor seleccionado
+            this.sidebar.style.display = 'block';
         }
     }
-    
-    
     async cargarCanalesServidor(servidorId) {
         this.selectedServerId = servidorId; // Establecer el ID del servidor seleccionado
         console.log("cargarCanalesServidor - servidorId:", servidorId);
@@ -274,14 +324,16 @@ class DiscordApp {
                 // Mostrar el sidebar con el mensaje "No hay canales" y el botón "Crear Canal"
                 this.sidebar.style.display = 'block';
             } else {
-                // Si hay canales, recorrer y mostrar los canales en el sidebar
+                // Si hay canales, recorrer y muestra los canales en el sidebar
                 canales.forEach((canal) => {
+                    console.log("Canal:", canal); // Agrega esta línea para depurar
+
                     const channelItem = document.createElement('button');
                     channelItem.classList.add('channel-item');
-                    channelItem.textContent = canal.nombre.trim(); // Eliminar espacios en blanco al principio y al final
+                    channelItem.textContent = canal.nombre.trim();
+                    channelItem.setAttribute('data-channel-id', canal.idCanal); // Aquí asignamos el ID del canal
                     this.channelList.appendChild(channelItem);
                 });
-    
                 // Mostrar el sidebar con los canales del servidor seleccionado
                 this.sidebar.style.display = 'block';
             }
