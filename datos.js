@@ -3,6 +3,8 @@ class Usuario {
     constructor(email, password) {
         this.email = email;
         this.password = password;
+        this.imagenUsuarioURL = null; // Nueva propiedad para la imagen del usuario
+        this.nombreUsuario = null; // Nueva propiedad para el nombre del usuario
     }
 
     //Utilizamos async declarar una funcion asyncronica y que el codigo continue
@@ -29,6 +31,9 @@ class Usuario {
 
             // Verifica si el inicio de sesión fue exitoso
             if (data.message === "Login successful") {
+                this.id_usuario=data.id_usuario;
+                this.img_perfil = data.img_perfil; // Obtener la imagen del usuario
+                this.username = data.username; // Obtener el nombre del usuario
                 return data; // Devuelve el objeto de respuesta JSON
             } else {
                 return null;
@@ -53,22 +58,34 @@ function handleLoginFormSubmit(event) {
     const password = document.getElementById("password").value;
 
     const usuario = new Usuario(email, password);
-
     usuario.verificarCredenciales()
-        .then((data) => {
-            if (data) {
-                alert("Inicio de sesión exitoso");
-                const idUsuario = obtenerIdUsuarioDeRespuesta(data);
-                localStorage.setItem('idUsuario', idUsuario); // Almacenar el ID del usuario en localStorage
-                console.log(idUsuario);
-                window.location.href = "servidores.html"; // Redireccionar a la página de servidores
-            } else {
-                alert("Correo electrónico o contraseña incorrectos. Inténtalo de nuevo.");
-            }
-        })
-        .catch((error) => {
-            console.error(error);
-        });
+    .then((data) => {
+        if (data) {
+            console.log("Respuesta del servidor:", data); // Imprime toda la respuesta JSON
+            alert("Inicio de sesión exitoso");
+            const id_usuario = data.id_usuario
+            localStorage.setItem('idUsuario', id_usuario);
+
+            const imagenUsuarioURL = data.img_perfil;
+            const nombreUsuario = data.username;
+
+            // Almacenar la imagen y el nombre del usuario en localStorage
+            localStorage.setItem('imagenUsuarioURL', imagenUsuarioURL);
+            localStorage.setItem('nombreUsuario', nombreUsuario);
+
+            console.log("Imagen del usuario:", imagenUsuarioURL);
+            console.log("Nombre del usuario:", nombreUsuario);
+
+            console.log("ID del usuario:", id_usuario);
+            window.location.href = "servidores.html"; // Redireccionar a la página de servidores
+
+        } else {
+            alert("Correo electrónico o contraseña incorrectos. Inténtalo de nuevo.");
+        }
+    })
+    .catch((error) => {
+        console.error(error);
+    });
 }
 
 document.addEventListener("DOMContentLoaded", function() {

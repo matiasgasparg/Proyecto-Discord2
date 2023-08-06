@@ -12,6 +12,9 @@ class DiscordApp {
         this.channelForm=document.getElementById('channelForm');
         this.createChannelModal = document.getElementById('createChannelModal');
         this.closeChannelModalButton = document.getElementById('closeChannelModalButton');
+        this.messagesCreate=document.getElementById('messagesCreate');
+        this.selectedChannelId = null; // Propiedad para almacenar el ID del canal seleccionado
+
         this.init();
     }
 
@@ -29,7 +32,20 @@ class DiscordApp {
             this.closeChannelModal();
 
         });
-        
+
+        const messagesCreate = document.getElementById('messagesCreate');
+        messagesCreate.addEventListener('click', () => {
+        const mensaje = document.getElementById('messageInput').value;
+        if (mensaje.trim() !== '') {
+            const idUsuario = localStorage.getItem('idUsuario');
+            const idServidor = this.selectedServerId;
+            const idCanal = this.selectedChannelId;
+            
+            this.enviarMensaje(idUsuario, idServidor, idCanal, mensaje);
+    } else {
+        console.error('El mensaje está vacío');
+    }
+});
 
         const idUsuario = localStorage.getItem('idUsuario');
         console.log("ID del usuario:", idUsuario);
@@ -70,6 +86,8 @@ class DiscordApp {
                 this.cargarMensajesCanal(channelId);
             }
         });
+     
+        
         
 
         this.serverForm.addEventListener('submit', (event) => {
@@ -90,12 +108,7 @@ class DiscordApp {
             this.crearChannel(channelName);
         
             });
-            this.channelList.addEventListener('click', (event) => {
-                if (event.target.classList.contains('channel-item')) {
-                    const channelId = event.target.getAttribute('data-channel-id');
-                    this.cargarMensajesCanal(channelId);
-                }
-            });
+    
     }
         
 
@@ -106,25 +119,57 @@ class DiscordApp {
                 throw new Error('Error al obtener los mensajes del canal');
             }
             const mensajes = await response.json();
-    
+
+            // Ordenar los mensajes por fecha de manera ascendente (más antiguo a más nuevo)
+            mensajes.sort((a, b) => new Date(a.fecha_hora) - new Date(b.fecha_hora));
+
             // Limpiar la lista de mensajes
             const messagesList = document.getElementById('messagesList');
             messagesList.innerHTML = '';
-    
+
             if (mensajes.length === 0) {
                 const noMessagesMessage = document.createElement('div');
                 noMessagesMessage.textContent = 'No hay mensajes en este canal';
                 messagesList.appendChild(noMessagesMessage);
             } else {
-                // Mostrar los mensajes en la lista
                 mensajes.forEach((mensaje) => {
-                    const messageItem = document.createElement('div');
-                    messageItem.classList.add('message-item');
-                    messageItem.textContent = mensaje.mensaje; // Aquí se ajusta a mensaje.mensaje
-                    messagesList.appendChild(messageItem);
+                    const messageContainer = document.createElement('div');
+                    messageContainer.classList.add('message-container');
+
+                    // Agregar la imagen del usuario o la imagen predeterminada
+                    const userImage = document.createElement('img');
+                    userImage.classList.add('user-image');
+                    userImage.alt = 'Imagen del usuario';
+
+                    userImage.src = mensaje.imagen ? mensaje.imagen : 'imagen_predeterminada.png';
+                    messageContainer.appendChild(userImage);
+
+                    const messageContent = document.createElement('div');
+                    messageContent.classList.add('message-content');
+
+                    // Agregar el nombre del usuario
+                    const userName = document.createElement('div');
+                    userName.classList.add('user-name');
+                    userName.textContent = mensaje.usuario;
+                    messageContent.appendChild(userName);
+
+                    // Agregar la fecha y hora
+                    const messageDateTime = document.createElement('div');
+                    messageDateTime.classList.add('message-datetime');
+                    messageDateTime.textContent = mensaje.fecha_hora;
+                    messageContent.appendChild(messageDateTime);
+
+                    // Agregar el contenido del mensaje
+                    const messageText = document.createElement('div');
+                    messageText.classList.add('message-text');
+                    messageText.textContent = mensaje.mensaje;
+                    messageContent.appendChild(messageText);
+
+                    messageContainer.appendChild(messageContent);
+                    messagesList.appendChild(messageContainer);
                 });
             }
-    
+
             // Mostrar la columna sidebar2 con los mensajes del canal
             const sidebar2 = document.querySelector('.sidebar2');
             sidebar2.style.display = 'block';
@@ -132,7 +177,37 @@ class DiscordApp {
             console.error('Error al cargar mensajes del canal:', error);
         }
     }
+
     
+    async enviarMensaje(idUsuario, idServidor, idCanal, mensaje) {
+
+    if (idUsuario && idServidor && idCanal && mensaje) {
+        try {
+            const url = `http://127.0.0.1:5000/users/servers/${idUsuario}/${idServidor}/canales/${idCanal}/messages`;
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    mensaje: mensaje,
+                }),
+            });
+
+            if (response.ok) {
+                console.log('Mensaje enviado correctamente');
+                this.cargarMensajesCanal(idCanal);
+            } else {
+                console.error('Error al enviar el mensaje');
+            }
+        } catch (error) {
+            console.error('Error al enviar el mensaje:', error);
+        }
+    } else {
+        console.error('Faltan datos para enviar el mensaje');
+    }
+}
+
     async crearServidor(serverName, serverDescription) {
         const idUsuario = localStorage.getItem('idUsuario');
         const url = `http://127.0.0.1:5000/users/${idUsuario}/servers`;
@@ -215,7 +290,6 @@ class DiscordApp {
         return await response.json();
     }
 
-
     mostrarServidores(servidores) {
         // Limpiar el contenido del contenedor de botones de servidores antes de mostrar los nuevos
         const serverButtonsContainer = document.querySelector('.server-buttons-container');
@@ -224,7 +298,7 @@ class DiscordApp {
         // Recorrer la matriz de servidores y mostrar cada servidor en un botón
         servidores.forEach((servidorInfo) => {
             const [idServidor, nombre, descripcion] = servidorInfo;
-
+    
             // Crear un botón para cada servidor con el nombre y el atributo data-id
             const button = document.createElement('button');
             button.classList.add('sv-item');
@@ -239,15 +313,48 @@ class DiscordApp {
                     svButton.classList.remove('selected');
                 });
     
+                // Actualizar la tarjeta del usuario
+                const userImage = document.getElementById('userImage');
+                const userName = document.getElementById('userName');
+    
+                // Obtener la imagen y el nombre del usuario desde localStorage
+                const userImageURL = localStorage.getItem('imagenUsuarioURL');
+                const userNameText = localStorage.getItem('nombreUsuario');
+    
+                // Actualizar la imagen y el nombre en la tarjeta
+                if (userImageURL !== 'null') {
+                    userImage.src = userImageURL;
+                } else {
+                    userImage.src = 'imagen_predeterminada.png';
+                }        
+                userName.textContent = userNameText ? userNameText : 'Nombre de Usuario';
+
+                    
+    
                 // Agregar la clase "selected" al botón del servidor seleccionado
                 button.classList.add('selected');
     
                 // Cargar los canales del servidor seleccionado
-                            
                 this.cargarCanalesServidor(idServidor);
             });
         });
+    
+        // Obtener la imagen y el nombre del usuario desde localStorage
+        const userImageURL = localStorage.getItem('imagenUsuarioURL');
+        const userNameText = localStorage.getItem('nombreUsuario');
+    
+        // Actualizar la imagen y el nombre en la tarjeta
+        const userImage = document.getElementById('userImage');
+        const userName = document.getElementById('userName');
+        if (userImageURL !== 'null') {
+            userImage.src = userImageURL;
+        } else {
+            userImage.src = 'imagen_predeterminada.png';
+        }        
+        userName.textContent = userNameText ? userNameText : 'Nombre de Usuario';
     }
+    
+    
      actualizarServidores() {
         const idUsuario = localStorage.getItem('idUsuario');
         console.log("ID del usuario:", idUsuario);
@@ -304,7 +411,11 @@ class DiscordApp {
     async cargarCanalesServidor(servidorId) {
         this.selectedServerId = servidorId; // Establecer el ID del servidor seleccionado
         console.log("cargarCanalesServidor - servidorId:", servidorId);
-
+    
+        // Ocultar el sidebar al cambiar de servidor
+        const sidebar2 = document.querySelector('.sidebar2');
+        sidebar2.style.display = 'none';
+    
         // Obtener el ID del usuario desde localStorage (o de donde lo obtengas)
         const idUsuario = localStorage.getItem('idUsuario');
     
@@ -320,18 +431,20 @@ class DiscordApp {
                 const noCanalesMessage = document.createElement('div');
                 noCanalesMessage.textContent = 'No hay canales';
                 this.channelList.appendChild(noCanalesMessage);
-   
+    
                 // Mostrar el sidebar con el mensaje "No hay canales" y el botón "Crear Canal"
                 this.sidebar.style.display = 'block';
             } else {
                 // Si hay canales, recorrer y muestra los canales en el sidebar
                 canales.forEach((canal) => {
-                    console.log("Canal:", canal); // Agrega esta línea para depurar
-
                     const channelItem = document.createElement('button');
                     channelItem.classList.add('channel-item');
                     channelItem.textContent = canal.nombre.trim();
-                    channelItem.setAttribute('data-channel-id', canal.idCanal); // Aquí asignamos el ID del canal
+                    channelItem.setAttribute('data-channel-id', canal.idCanal);
+                    channelItem.addEventListener('click', () => {
+                        this.selectedChannelId = canal.idCanal; // Almacena el ID del canal seleccionado
+                        this.cargarMensajesCanal(canal.idCanal);
+                    });
                     this.channelList.appendChild(channelItem);
                 });
                 // Mostrar el sidebar con los canales del servidor seleccionado
