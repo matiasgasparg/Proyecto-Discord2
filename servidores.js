@@ -139,7 +139,6 @@ class DiscordApp {
         searchServerForm.reset();
     }
 
-        
     async buscarServidoresPorNombre(nombre) {
         try {
             const response = await fetch(`http://127.0.0.1:5000/servidores/${nombre}`);
@@ -150,29 +149,28 @@ class DiscordApp {
             const foundServer = await response.json();
             console.log("Servidor encontrado:", foundServer);
     
-            // Obtén el contenedor donde se mostrarán los servidores encontrados
-            const foundServersContainer = document.querySelector('.found-servers-container');
+            // Obtén el contenedor donde se mostrarán los detalles del servidor encontrado
+            const serverDetailsContainer = document.querySelector('.sidebar3');
+            serverDetailsContainer.innerHTML = '';
     
-            // Limpia el contenido actual del contenedor
-            foundServersContainer.innerHTML = '';
-    
-            // Crea un elemento para mostrar los detalles del servidor encontrado
+            // Mostrar los detalles del servidor encontrado
             const serverDetails = document.createElement('div');
             serverDetails.classList.add('server-details');
-    
-            // Agrega los detalles del servidor al elemento
             serverDetails.innerHTML = `
                 <h3>Detalles del servidor encontrado:</h3>
                 <p>Nombre: ${foundServer.nombre}</p>
                 <p>Descripción: ${foundServer.descripcion}</p>
                 <p>Cantidad de usuarios: ${foundServer.cantidad_usuarios}</p>
             `;
+            serverDetailsContainer.appendChild(serverDetails);
+            serverDetailsContainer.style.display = 'block'; // Mostrar la columna contigua
+            const sidebar = document.querySelector('.sidebar');
+            const sidebar2 = document.querySelector('.sidebar2');
+            sidebar.style.display='none';
+            sidebar2.style.display='none';
     
-            // Agrega el elemento al contenedor
-            foundServersContainer.appendChild(serverDetails);
         } catch (error) {
             console.error("Error al buscar el servidor:", error);
-    
             // En caso de error, obtener todos los servidores
             try {
                 const responseAll = await fetch('http://127.0.0.1:5000/servidores');
@@ -492,7 +490,10 @@ class DiscordApp {
     
         // Ocultar el sidebar al cambiar de servidor
         const sidebar2 = document.querySelector('.sidebar2');
+        const sidebar3=document.querySelector('.sidebar3')
         sidebar2.style.display = 'none';
+        sidebar3.style.display='none';
+        
     
         // Obtener el ID del usuario desde localStorage (o de donde lo obtengas)
         const idUsuario = localStorage.getItem('idUsuario');

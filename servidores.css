@@ -47,7 +47,12 @@ body {
     flex-direction: column;
     align-items: flex-start;
 }
-
+.server-details-container {
+    grid-column: span 2; /* Ocupa dos columnas en el grid */
+    padding: 20px;
+    background-color: #f5f5f5;
+    display: none; /* Por defecto, oculto */
+}
 .sidebar {
     padding: 20px;
     background-color: #f5f5f5;
@@ -135,4 +140,32 @@ body {
 
 .message-text {
     margin-top: 5px;
+}
+.main-container {
+    display: flex; /* Utilizamos flexbox para crear dos contenedores en línea */
+    height: 100vh; /* Ocupar toda la altura de la pantalla */
+    overflow: hidden; /* Evitar desbordamiento vertical */
+}
+
+.container {
+    /* Estilos para el contenedor original */
+    flex: 1; /* Ocupa todo el espacio restante */
+    overflow-y: auto; /* Scroll vertical si es necesario */
+}
+
+.server-details-container {
+    /* Estilos para el nuevo contenedor */
+    width: 0; /* Inicialmente oculto */
+    flex: 0; /* No ocupa espacio horizontal */
+    overflow-y: auto; /* Scroll vertical si es necesario */
+    background-color: #f5f5f5;
+    padding: 20px;
+    display: none; /* Inicialmente oculto */
+}
+.sidebar2, .sidebar3 {
+    padding: 20px;
+    background-color: #f5f5f5;
+    display: none; /* Inicialmente ocultos */
+    flex-direction: column; /* Establecemos dirección vertical para los elementos en los sidebars */
+    overflow-y: auto;
 }

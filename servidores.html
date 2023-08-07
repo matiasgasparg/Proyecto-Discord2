@@ -19,8 +19,12 @@
             <div class="user-card">
                 <img id="userImage" class="user-image" src="imagen_predeterminada.png" alt="User Image">
                 <div id="userName" class="user-name">Nombre de Usuario</div>
-            </div>  
+            </div>
+            <div class="found-servers-container">
+                <!-- Aquí se mostrarán los servidores encontrados -->
+            </div> 
         </div>
+  
     
         <!-- Columna contigua a los servidores -->
         <div class="sidebar" style="display: none;">        
@@ -30,7 +34,8 @@
             </div>
             <button class="channelCreate" id="channelCreate">Crear canal nuevo</button>
         </div>
-    
+          <!-- Nueva columna para los servidores encontrados -->
+      
         <div class="sidebar2" style="display: none;">        
             <div class="messages" id="messagesList">
                 <!-- Listado de canales del servidor seleccionado -->
@@ -40,7 +45,17 @@
             <textarea id="messageInput" placeholder="Escribe tu mensaje aquí"></textarea>
             <button class="messages" id="messagesCreate">Enviar mensaje</button>
         </div>
-    </div>
+        <!-- Columna para los canales -->
+        <div class="sidebar3" style="display: none;">
+            <!-- ... (contenido de la columna de canales) -->
+            <div class="found-servers-container">
+            <!-- Aquí se mostrarán los servidores encontrados -->
+            </div>
+            <button class="messages" id="unirmeServidor">Unirme</button>
+            </div>
+        </div>
+        
+     
     <div id="createServerModal" class="modal">
         <div class="modal-content">
             <h2>Crear servidor nuevo</h2>
@@ -82,9 +97,7 @@
             </form>
         </div>
     </div>
-    <div class="server-buttons-container found-servers-container">
-        <!-- Aquí se mostrarán los servidores encontrados -->
-    </div>
+
     <script src="servidores.js"></script>
 </body>
 </html>
