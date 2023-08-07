@@ -46,6 +46,8 @@ class DiscordApp {
             console.log("Nombre del servidor a buscar:", serverNameSearch);
 
             // Realizar la búsqueda utilizando el serverNameSearch
+            this.buscarServidoresPorNombre(serverNameSearch);
+
 
             this.closeSearchModal();
         });
@@ -138,7 +140,56 @@ class DiscordApp {
     }
 
         
-
+    async buscarServidoresPorNombre(nombre) {
+        try {
+            const response = await fetch(`http://127.0.0.1:5000/servidores/${nombre}`);
+            if (!response.ok) {
+                throw new Error('No se ha encontrado el servidor');
+            }
+    
+            const foundServer = await response.json();
+            console.log("Servidor encontrado:", foundServer);
+    
+            // Obtén el contenedor donde se mostrarán los servidores encontrados
+            const foundServersContainer = document.querySelector('.found-servers-container');
+    
+            // Limpia el contenido actual del contenedor
+            foundServersContainer.innerHTML = '';
+    
+            // Crea un elemento para mostrar los detalles del servidor encontrado
+            const serverDetails = document.createElement('div');
+            serverDetails.classList.add('server-details');
+    
+            // Agrega los detalles del servidor al elemento
+            serverDetails.innerHTML = `
+                <h3>Detalles del servidor encontrado:</h3>
+                <p>Nombre: ${foundServer.nombre}</p>
+                <p>Descripción: ${foundServer.descripcion}</p>
+                <p>Cantidad de usuarios: ${foundServer.cantidad_usuarios}</p>
+            `;
+    
+            // Agrega el elemento al contenedor
+            foundServersContainer.appendChild(serverDetails);
+        } catch (error) {
+            console.error("Error al buscar el servidor:", error);
+    
+            // En caso de error, obtener todos los servidores
+            try {
+                const responseAll = await fetch('http://127.0.0.1:5000/servidores');
+                if (!responseAll.ok) {
+                    throw new Error('Error al obtener todos los servidores');
+                }
+    
+                const allServers = await responseAll.json();
+                console.log("Todos los servidores:", allServers);
+    
+                // Aquí puedes mostrar o utilizar todos los servidores obtenidos como necesites
+            } catch (error) {
+                console.error("Error al obtener todos los servidores:", error);
+            }
+        }
+    }
+    
     async cargarMensajesCanal(idCanal) {
         try {
             const response = await fetch(`http://127.0.0.1:5000/canal/${idCanal}`);
