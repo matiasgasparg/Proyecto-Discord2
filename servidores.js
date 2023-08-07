@@ -181,7 +181,25 @@ class DiscordApp {
                 const allServers = await responseAll.json();
                 console.log("Todos los servidores:", allServers);
     
-                // Aquí puedes mostrar o utilizar todos los servidores obtenidos como necesites
+                //  mostrar o utilizar todos los servidores obtenidos como necesites
+                const foundServersContainer = document.querySelector('.sidebar3');
+                foundServersContainer.innerHTML = '';
+                 allServers.forEach(foundServer => {
+                const serverItem = document.createElement('button');
+                serverItem.classList.add('sv-item');
+                serverItem.innerText = foundServer.nombre;
+                serverItem.addEventListener('click', () => {
+                    this.mostrarDetallesServidor(foundServer);
+                });
+                foundServersContainer.appendChild(serverItem);
+            });
+
+                const serverDetailsContainer = document.querySelector('.found-servers-container');
+                serverDetailsContainer.style.display = 'none';
+
+
+
+
             } catch (error) {
                 console.error("Error al obtener todos los servidores:", error);
             }
