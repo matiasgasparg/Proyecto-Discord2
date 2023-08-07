@@ -14,6 +14,8 @@ class DiscordApp {
         this.closeChannelModalButton = document.getElementById('closeChannelModalButton');
         this.messagesCreate=document.getElementById('messagesCreate');
         this.selectedChannelId = null; // Propiedad para almacenar el ID del canal seleccionado
+        this.closeSearchModalButton=document.getElementById('closeSearchModalButton')
+        this.searchServerForm = document.getElementById('searchServerForm');
 
         this.init();
     }
@@ -24,15 +26,29 @@ class DiscordApp {
             this.modal.style.display = 'block';
         });
 
-        this.searchButton.addEventListener('click', () => {
-            this.modal.style.display = 'block';
+          this.searchButton.addEventListener('click', () => {
+            this.openSearchModal();
+        });
+        this.closeSearchModalButton.addEventListener('click', () => {
+            this.closeSearchModal();
+
         });
         this.closeChannelModalButton.addEventListener('click',()=>{
             console.log("Boton'Cerrar Canal model'clickeado");
             this.closeChannelModal();
 
         });
+        
+        this.searchServerForm.addEventListener('submit', (event) => {
+            event.preventDefault();
+            const serverNameSearch = document.getElementById('serverNameSearch').value;
 
+            console.log("Nombre del servidor a buscar:", serverNameSearch);
+
+            // Realizar la búsqueda utilizando el serverNameSearch
+
+            this.closeSearchModal();
+        });
         const messagesCreate = document.getElementById('messagesCreate');
         messagesCreate.addEventListener('click', () => {
         const mensaje = document.getElementById('messageInput').value;
@@ -110,6 +126,17 @@ class DiscordApp {
             });
     
     }
+    openSearchModal() {
+        const searchServerModal = document.getElementById('searchServerModal');
+        searchServerModal.style.display = 'block';
+    }   
+     closeSearchModal() {
+        const searchServerModal = document.getElementById('searchServerModal');
+        searchServerModal.style.display = 'none';
+        const searchServerForm = document.getElementById('searchServerForm');
+        searchServerForm.reset();
+    }
+
         
 
     async cargarMensajesCanal(idCanal) {
