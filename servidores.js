@@ -184,13 +184,16 @@ class DiscordApp {
                 //  mostrar o utilizar todos los servidores obtenidos como necesites
                 const foundServersContainer = document.querySelector('.sidebar3');
                 foundServersContainer.innerHTML = '';
+                
                  allServers.forEach(foundServer => {
                 const serverItem = document.createElement('button');
-                serverItem.classList.add('sv-item');
-                serverItem.innerText = foundServer.nombre;
-                serverItem.addEventListener('click', () => {
-                    this.mostrarDetallesServidor(foundServer);
-                });
+                serverItem.classList.add('sv-item2');
+                serverItem.innerHTML = `
+                <h3>Detalles del servidor encontrado:</h3>
+                <p>Nombre: ${foundServer.nombre}</p>
+                <p>Descripción: ${foundServer.descripcion}</p>
+                <p>Cantidad de usuarios: ${foundServer.cantidad_usuarios}</p>
+            `;
                 foundServersContainer.appendChild(serverItem);
             });
 

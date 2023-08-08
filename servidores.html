@@ -9,11 +9,9 @@
 <body>
     <div class="container">
         <div class="servers" id="serverList">
-            <!-- Contenedor para los botones de los servidores -->
             <div class="server-buttons-container">
                 <!-- Listado de servidores -->
             </div>
-            <!-- Botón "Crear servidor nuevo" dentro del contenedor de servidores -->
             <button class="sv-item" id="createServerButton">Crear servidor nuevo</button>
             <button class="sv-item" id="searchButton">Buscar servidor</button>
             <div class="user-card">
@@ -22,38 +20,35 @@
             </div>
             <div class="found-servers-container">
                 <!-- Aquí se mostrarán los servidores encontrados -->
-            </div> 
-        </div>
-  
-    
-        <!-- Columna contigua a los servidores -->
-        <div class="sidebar" style="display: none;">        
-            <div class="channels" id="channelList">
-                <!-- Listado de canales del servidor seleccionado -->
- 
             </div>
-            <button class="channelCreate" id="channelCreate">Crear canal nuevo</button>
         </div>
-          <!-- Nueva columna para los servidores encontrados -->
-      
-        <div class="sidebar2" style="display: none;">        
+    
+        <div class="main-container">
+            <!-- Columna contigua a los servidores -->
+            <div class="sidebar" style="display: none;">
+                <div class="channels" id="channelList">
+                    <!-- Listado de canales del servidor seleccionado -->
+                </div>
+                <button class="channelCreate" id="channelCreate">Crear canal nuevo</button>
+            </div>
+        </div>
+         <!-- Nueva columna para los mensajes -->
+        <div class="sidebar2" style="display: none;">
             <div class="messages" id="messagesList">
-                <!-- Listado de canales del servidor seleccionado -->
-        
-
+                <!-- Listado de mensajes -->
             </div>
             <textarea id="messageInput" placeholder="Escribe tu mensaje aquí"></textarea>
             <button class="messages" id="messagesCreate">Enviar mensaje</button>
         </div>
+    
         <!-- Columna para los servidores encontrados -->
         <div class="sidebar3" style="display: none;">
             <div class="found-servers-container">
-            <!-- Aquí se mostrarán los servidores encontrados -->
+                <!-- Aquí se mostrarán los servidores encontrados -->
             </div>
             <button class="messages" id="unirmeServidor">Unirme</button>
-            </div>
         </div>
-        
+    </div>
      
     <div id="createServerModal" class="modal">
         <div class="modal-content">
