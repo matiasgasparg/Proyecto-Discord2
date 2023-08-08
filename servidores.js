@@ -204,6 +204,7 @@ class DiscordApp {
 
                 });
                 foundServersContainer.appendChild(serverItem);
+                foundServersContainer.style.display='block'
             });
 
                 const serverDetailsContainer = document.querySelector('.found-servers-container');
