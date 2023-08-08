@@ -164,7 +164,7 @@ class DiscordApp {
             `;
             
             serverDetails.addEventListener('click', () => {
-                unirmeServidor(foundServer.idservidor);
+                this.unirmeServidor(foundServer.idservidor);
             });
             serverDetailsContainer.appendChild(serverDetails);
             serverDetailsContainer.style.display = 'block'; // Mostrar la columna contigua
@@ -200,7 +200,7 @@ class DiscordApp {
                 <p>Cantidad de usuarios: ${foundServer.cantidad_usuarios}</p>
             `;
                 serverItem.addEventListener('click', () => {
-                    unirmeServidor(foundServer.idservidor);
+                    this.unirmeServidor(foundServer.idservidor);
 
                 });
                 foundServersContainer.appendChild(serverItem);
@@ -217,8 +217,10 @@ class DiscordApp {
                 console.error("Error al obtener todos los servidores:", error);
             }
         }
+    }
+     
     
-        async function unirmeServidor(idServidor) {
+        async unirmeServidor(idServidor) {
             const idUsuario = localStorage.getItem('idUsuario');
             
             if (idUsuario && idServidor) {
@@ -236,6 +238,9 @@ class DiscordApp {
                     
                     if (response.status === 200) {
                         console.log(data.message); // Unión exitosa
+
+                        this.actualizarServidores(); // Llamar a actualizarServidores después de una unión exitosa
+                        console.log('Actualizacion columna servidor') 
                     } else if (response.status === 409) {
                         console.error(data.message); // Usuario ya es miembro del servidor
                         alert(data.message);
@@ -250,7 +255,7 @@ class DiscordApp {
                 console.error('ID de usuario o ID de servidor no proporcionado.');
             }
         }
-    }
+    
         
     async cargarMensajesCanal(idCanal) {
         try {
