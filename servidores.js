@@ -148,13 +148,13 @@ class DiscordApp {
     
             const foundServer = await response.json();
             console.log("Servidor encontrado:", foundServer);
-    
+            
             // Obtén el contenedor donde se mostrarán los detalles del servidor encontrado
             const serverDetailsContainer = document.querySelector('.sidebar3');
             serverDetailsContainer.innerHTML = '';
     
             // Mostrar los detalles del servidor encontrado
-            const serverDetails = document.createElement('div');
+            const serverDetails = document.createElement('button');
             serverDetails.classList.add('server-details');
             serverDetails.innerHTML = `
                 <h3>Detalles del servidor encontrado:</h3>
@@ -162,8 +162,13 @@ class DiscordApp {
                 <p>Descripción: ${foundServer.descripcion}</p>
                 <p>Cantidad de usuarios: ${foundServer.cantidad_usuarios}</p>
             `;
+            
+            serverDetails.addEventListener('click', () => {
+                this.mostrarDetallesServidor(foundServer);
+            });
             serverDetailsContainer.appendChild(serverDetails);
             serverDetailsContainer.style.display = 'block'; // Mostrar la columna contigua
+
             const sidebar = document.querySelector('.sidebar');
             const sidebar2 = document.querySelector('.sidebar2');
             sidebar.style.display='none';
@@ -194,6 +199,9 @@ class DiscordApp {
                 <p>Descripción: ${foundServer.descripcion}</p>
                 <p>Cantidad de usuarios: ${foundServer.cantidad_usuarios}</p>
             `;
+                serverItem.addEventListener('click', () => {
+                this.mostrarDetallesServidor(foundServer);
+            });
                 foundServersContainer.appendChild(serverItem);
             });
 
