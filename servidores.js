@@ -164,7 +164,7 @@ class DiscordApp {
             `;
             
             serverDetails.addEventListener('click', () => {
-                this.mostrarDetallesServidor(foundServer);
+                unirmeServidor(foundServer.idservidor);
             });
             serverDetailsContainer.appendChild(serverDetails);
             serverDetailsContainer.style.display = 'block'; // Mostrar la columna contigua
@@ -200,8 +200,9 @@ class DiscordApp {
                 <p>Cantidad de usuarios: ${foundServer.cantidad_usuarios}</p>
             `;
                 serverItem.addEventListener('click', () => {
-                this.mostrarDetallesServidor(foundServer);
-            });
+                    unirmeServidor(foundServer.idservidor);
+
+                });
                 foundServersContainer.appendChild(serverItem);
             });
 
@@ -215,8 +216,41 @@ class DiscordApp {
                 console.error("Error al obtener todos los servidores:", error);
             }
         }
-    }
     
+        async function unirmeServidor(idServidor) {
+            const idUsuario = localStorage.getItem('idUsuario');
+            
+            if (idUsuario && idServidor) {
+                try {
+                    const url = `http://127.0.0.1:5000/users/servidores/${idUsuario}/${idServidor}`;
+                    
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+        
+                    const data = await response.json();
+                    
+                    if (response.status === 200) {
+                        console.log(data.message); // Unión exitosa
+                    } else if (response.status === 409) {
+                        console.error(data.message); // Usuario ya es miembro del servidor
+                        alert(data.message);
+
+                    } else {
+                        console.error(data.message); // Otro error al unirse
+                    }
+                } catch (error) {
+                    console.error('Error en la solicitud:', error);
+                }
+            } else {
+                console.error('ID de usuario o ID de servidor no proporcionado.');
+            }
+        }
+    }
+        
     async cargarMensajesCanal(idCanal) {
         try {
             const response = await fetch(`http://127.0.0.1:5000/canal/${idCanal}`);
