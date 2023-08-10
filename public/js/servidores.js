@@ -53,18 +53,24 @@ class DiscordApp {
             this.closeSearchModal();
         });
         const messagesCreate = document.getElementById('messagesCreate');
-        messagesCreate.addEventListener('click', () => {
-        const mensaje = document.getElementById('messageInput').value;
-        if (mensaje.trim() !== '') {
-            const idUsuario = localStorage.getItem('idUsuario');
-            const idServidor = this.selectedServerId;
-            const idCanal = this.selectedChannelId;
-            
-            this.enviarMensaje(idUsuario, idServidor, idCanal, mensaje);
-    } else {
-        console.error('El mensaje está vacío');
-    }
-});
+        messagesCreate.addEventListener('click', async () => {
+            const mensajeInput = document.getElementById('messageInput');
+            const mensaje = mensajeInput.value;
+        
+            if (mensaje.trim() !== '') {
+                const idUsuario = localStorage.getItem('idUsuario');
+                const idServidor = this.selectedServerId;
+                const idCanal = this.selectedChannelId;
+        
+                await this.enviarMensaje(idUsuario, idServidor, idCanal, mensaje);
+                
+                // Limpiar el contenido del textarea después de enviar el mensaje
+                mensajeInput.value = '';
+            } else {
+                console.error('El mensaje está vacío');
+            }
+        });
+        
 
         const idUsuario = localStorage.getItem('idUsuario');
         console.log("ID del usuario:", idUsuario);
