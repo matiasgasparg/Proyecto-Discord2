@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Registro de Usuario</title>
+  <link rel="stylesheet" href="crear.css">
+</head>
+<body>
+  <div class="login-box">
+    <h1>Registro de Usuario</h1>
+    <form id="registrationForm">
+        <div class="user-box">
+            <input type="text" id="name" required>
+            <label for="name">Nombre</label>
+        </div>
+  
+        <div class="user-box">
+          <input type="text" id="email" required>
+          <label for="email">Correo Electronico</label>
+      </div>
+        <div class="user-box">
+            <input type="text" id="username" required>
+            <label for="username">Nombre de usuario:</label>
+        </div>
+        <div class="user-box">
+            <input type="password" id="password" required>
+            <label for="password">Contraseña:</label>
+        </div>
+        <div>
+          <label>Fecha de Nacimiento:</label>
+        </div>
+        <div class="user-box">
+          
+          <input type="date" id="datebirth" required>
+        </div>
+      <!-- Agrega otros campos que desees para el registro -->
+      
+      <button type="submit">Confirmar</button>
+    </form>
+  </div>
+  <script src="crear.js"></script>
+</body>
+</html>
