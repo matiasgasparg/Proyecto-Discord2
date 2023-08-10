@@ -77,7 +77,7 @@ function handleLoginFormSubmit(event) {
             console.log("Nombre del usuario:", nombreUsuario);
 
             console.log("ID del usuario:", id_usuario);
-            window.location.href = "../servidores.html";
+            window.location.href = "./servidores.html";
 
         } else {
             alert("Correo electrónico o contraseña incorrectos. Inténtalo de nuevo.");

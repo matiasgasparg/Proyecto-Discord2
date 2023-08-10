@@ -1,3 +1,5 @@
+const BASE_URL = "http://127.0.0.1:5000"; // Cambiar esta dirección si es necesario
+
 class DiscordApp {
     constructor() {
         this.modal = document.getElementById('createServerModal');
@@ -13,7 +15,6 @@ class DiscordApp {
         this.createChannelModal = document.getElementById('createChannelModal');
         this.closeChannelModalButton = document.getElementById('closeChannelModalButton');
         this.messagesCreate=document.getElementById('messagesCreate');
-        this.selectedChannelId = null; // Propiedad para almacenar el ID del canal seleccionado
         this.closeSearchModalButton=document.getElementById('closeSearchModalButton')
         this.searchServerForm = document.getElementById('searchServerForm');
 
@@ -78,7 +79,6 @@ class DiscordApp {
                     console.error("Error al obtener los servidores:", error);
                 });
         }
-        this.selectedServerId = null; // Propiedad para almacenar el ID del servidor seleccionado
         this.serverList.querySelectorAll('.sv-item:not(#createServerButton):not(#searchButton)').forEach((button) => {
             button.addEventListener('click', () => {
                 const servidorId = button.getAttribute('data-id');
@@ -101,6 +101,7 @@ class DiscordApp {
         this.channelList.addEventListener('click', (event) => {
             if (event.target.classList.contains('channel-item')) {
                 const channelId = event.target.getAttribute('data-channel-id');
+                this.selectedChannelId= channelId;
                 this.cargarMensajesCanal(channelId);
             }
         });
@@ -141,7 +142,7 @@ class DiscordApp {
 
     async buscarServidoresPorNombre(nombre) {
         try {
-            const response = await fetch(`http://127.0.0.1:5000/servidores/${nombre}`);
+            const response = await fetch(`${BASE_URL}/servidores/${nombre}`);
             if (!response.ok) {
                 throw new Error('No se ha encontrado el servidor');
             }
@@ -178,7 +179,7 @@ class DiscordApp {
             console.error("Error al buscar el servidor:", error);
             // En caso de error, obtener todos los servidores
             try {
-                const responseAll = await fetch('http://127.0.0.1:5000/servidores');
+                const responseAll = await fetch(`${BASE_URL}/servidores`);
                 if (!responseAll.ok) {
                     throw new Error('Error al obtener todos los servidores');
                 }
@@ -225,7 +226,7 @@ class DiscordApp {
             
             if (idUsuario && idServidor) {
                 try {
-                    const url = `http://127.0.0.1:5000/users/servidores/${idUsuario}/${idServidor}`;
+                    const url = `${BASE_URL}/users/servidores/${idUsuario}/${idServidor}`;
                     
                     const response = await fetch(url, {
                         method: 'POST',
@@ -259,7 +260,7 @@ class DiscordApp {
         
     async cargarMensajesCanal(idCanal) {
         try {
-            const response = await fetch(`http://127.0.0.1:5000/canal/${idCanal}`);
+            const response = await fetch(`${BASE_URL}/canal/${idCanal}`);
             if (!response.ok) {
                 throw new Error('Error al obtener los mensajes del canal');
             }
@@ -325,37 +326,39 @@ class DiscordApp {
 
     
     async enviarMensaje(idUsuario, idServidor, idCanal, mensaje) {
-
-    if (idUsuario && idServidor && idCanal && mensaje) {
-        try {
-            const url = `http://127.0.0.1:5000/users/servers/${idUsuario}/${idServidor}/canales/${idCanal}/messages`;
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    mensaje: mensaje,
-                }),
-            });
-
-            if (response.ok) {
-                console.log('Mensaje enviado correctamente');
-                this.cargarMensajesCanal(idCanal);
-            } else {
-                console.error('Error al enviar el mensaje');
+        if (idUsuario && idServidor && idCanal) {
+            try {
+                const url = `${BASE_URL}/users/servers/${idUsuario}/${idServidor}/canales/${idCanal}/messages`;
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        mensaje: mensaje,
+                    }),
+                });
+    
+                if (response.ok) {
+                    console.log('Mensaje enviado correctamente');
+                    // Solo carga mensajes si el ID del canal está definido
+                    if (this.selectedChannelId) {
+                        this.cargarMensajesCanal(this.selectedChannelId);
+                    }
+                } else {
+                    console.error('Error al enviar el mensaje');
+                }
+            } catch (error) {
+                console.error('Error al enviar el mensaje:', error);
             }
-        } catch (error) {
-            console.error('Error al enviar el mensaje:', error);
+        } else {
+            console.error('Faltan datos para enviar el mensaje');
         }
-    } else {
-        console.error('Faltan datos para enviar el mensaje');
     }
-}
 
     async crearServidor(serverName, serverDescription) {
         const idUsuario = localStorage.getItem('idUsuario');
-        const url = `http://127.0.0.1:5000/users/${idUsuario}/servers`;
+        const url = `${BASE_URL}/users/${idUsuario}/servers`;
 
         try {
             const response = await fetch(url, {
@@ -383,7 +386,7 @@ class DiscordApp {
 
     async obtenerServidoresPorUsuario(idUsuario) {
         
-        const response = await fetch(`http://127.0.0.1:5000/users/servers/${idUsuario}`);
+        const response = await fetch(`${BASE_URL}/users/servers/${idUsuario}`);
         console.log(idUsuario)
         if (!response.ok) {
             throw new Error('Error al obtener los servidores del usuario');
@@ -396,7 +399,7 @@ class DiscordApp {
     
         if (idServidor) {
             try {
-                const url = `http://127.0.0.1:5000/users/${idUsuario}/servidores/${idServidor}/canales`;
+                const url = `${BASE_URL}/users/${idUsuario}/servidores/${idServidor}/canales`;
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: {
@@ -423,7 +426,7 @@ class DiscordApp {
     
 
     async obtenerCanalesPorServidor(idUsuario, idServidor) {
-        const response = await fetch(`http://127.0.0.1:5000/users/servers/${idUsuario}/${idServidor}`);
+        const response = await fetch(`${BASE_URL}/users/servers/${idUsuario}/${idServidor}`);
         if (!response.ok) {
             if (response.status === 404) {
                 // Retornar un array vacío en caso de error 404 (no se encontraron canales)
