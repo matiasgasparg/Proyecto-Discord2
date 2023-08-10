@@ -141,7 +141,7 @@ class DiscordApp {
 
     async buscarServidoresPorNombre(nombre) {
         try {
-            const response = await fetch(`http://matiasgasparg.pythonanywhere.com/servidores/${nombre}`);
+            const response = await fetch(`https://matiasgasparg.pythonanywhere.com/servidores/${nombre}`);
             if (!response.ok) {
                 throw new Error('No se ha encontrado el servidor');
             }
@@ -178,7 +178,7 @@ class DiscordApp {
             console.error("Error al buscar el servidor:", error);
             // En caso de error, obtener todos los servidores
             try {
-                const responseAll = await fetch('http://matiasgasparg.pythonanywhere.com/servidores');
+                const responseAll = await fetch('https://matiasgasparg.pythonanywhere.com/servidores');
                 if (!responseAll.ok) {
                     throw new Error('Error al obtener todos los servidores');
                 }
@@ -225,7 +225,7 @@ class DiscordApp {
             
             if (idUsuario && idServidor) {
                 try {
-                    const url = `http://matiasgasparg.pythonanywhere.com/users/servidores/${idUsuario}/${idServidor}`;
+                    const url = `https://matiasgasparg.pythonanywhere.com/users/servidores/${idUsuario}/${idServidor}`;
                     
                     const response = await fetch(url, {
                         method: 'POST',
@@ -259,7 +259,7 @@ class DiscordApp {
         
     async cargarMensajesCanal(idCanal) {
         try {
-            const response = await fetch(`http://matiasgasparg.pythonanywhere.com/canal/${idCanal}`);
+            const response = await fetch(`https://matiasgasparg.pythonanywhere.com/canal/${idCanal}`);
             if (!response.ok) {
                 throw new Error('Error al obtener los mensajes del canal');
             }
@@ -328,7 +328,7 @@ class DiscordApp {
 
     if (idUsuario && idServidor && idCanal && mensaje) {
         try {
-            const url = `http://matiasgasparg.pythonanywhere.com/users/servers/${idUsuario}/${idServidor}/canales/${idCanal}/messages`;
+            const url = `https://matiasgasparg.pythonanywhere.com/users/servers/${idUsuario}/${idServidor}/canales/${idCanal}/messages`;
             const response = await fetch(url, {
                 method: 'POST',
                 headers: {
@@ -355,7 +355,7 @@ class DiscordApp {
 
     async crearServidor(serverName, serverDescription) {
         const idUsuario = localStorage.getItem('idUsuario');
-        const url = `http://matiasgasparg.pythonanywhere.com/users/${idUsuario}/servers`;
+        const url = `https://matiasgasparg.pythonanywhere.com/users/${idUsuario}/servers`;
 
         try {
             const response = await fetch(url, {
@@ -383,7 +383,7 @@ class DiscordApp {
 
     async obtenerServidoresPorUsuario(idUsuario) {
         
-        const response = await fetch(`http://matiasgasparg.pythonanywhere.com/users/servers/${idUsuario}`);
+        const response = await fetch(`https://matiasgasparg.pythonanywhere.com/users/servers/${idUsuario}`);
         console.log(idUsuario)
         if (!response.ok) {
             throw new Error('Error al obtener los servidores del usuario');
@@ -396,7 +396,7 @@ class DiscordApp {
     
         if (idServidor) {
             try {
-                const url = `http://matiasgasparg.pythonanywhere.com/users/${idUsuario}/servidores/${idServidor}/canales`;
+                const url = `https://matiasgasparg.pythonanywhere.com/users/${idUsuario}/servidores/${idServidor}/canales`;
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: {
@@ -423,7 +423,7 @@ class DiscordApp {
     
 
     async obtenerCanalesPorServidor(idUsuario, idServidor) {
-        const response = await fetch(`http://matiasgasparg.pythonanywhere.com/users/servers/${idUsuario}/${idServidor}`);
+        const response = await fetch(`https://matiasgasparg.pythonanywhere.com/users/servers/${idUsuario}/${idServidor}`);
         if (!response.ok) {
             if (response.status === 404) {
                 // Retornar un array vacío en caso de error 404 (no se encontraron canales)

@@ -11,7 +11,7 @@ class Usuario {
     async verificarCredenciales() {
         try {
             //Hacemos la llamada al backend y utilizamos wait para esperar la respuesta y que continue cuando haya respuesta
-            const respuesta = await fetch("http://matiasgasparg.pythonanywhere.com/users/login", {
+            const respuesta = await fetch("https://matiasgasparg.pythonanywhere.com/users/login", {
                 //Declaramos el metodo de llamada, el encabezado , y convertimos los datos en lineas JSON, con stringfy
                 method: "POST",
                 headers: {
@@ -77,7 +77,7 @@ function handleLoginFormSubmit(event) {
             console.log("Nombre del usuario:", nombreUsuario);
 
             console.log("ID del usuario:", id_usuario);
-            window.location.href = "servidores.html"; // Redireccionar a la página de servidores
+            window.location.href = "../servidores.html";
 
         } else {
             alert("Correo electrónico o contraseña incorrectos. Inténtalo de nuevo.");
