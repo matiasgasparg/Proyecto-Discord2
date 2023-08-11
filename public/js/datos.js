@@ -11,7 +11,7 @@ class Usuario {
     async verificarCredenciales() {
         try {
             //Hacemos la llamada al backend y utilizamos wait para esperar la respuesta y que continue cuando haya respuesta
-            const respuesta = await fetch("http://127.0.0.1:5000/users/login", {
+            const respuesta = await fetch("https://matiasgasparg.pythonanywhere.com/users/login", {
                 //Declaramos el metodo de llamada, el encabezado , y convertimos los datos en lineas JSON, con stringfy
                 method: "POST",
                 headers: {

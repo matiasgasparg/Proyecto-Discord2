@@ -1,4 +1,4 @@
-const BASE_URL = "http://127.0.0.1:5000"; // Cambiar esta dirección si es necesario
+const BASE_URL = "https://matiasgasparg.pythonanywhere.com"; // Cambiar esta dirección si es necesario
 
 class DiscordApp {
     constructor() {
