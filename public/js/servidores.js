@@ -285,6 +285,7 @@ class DiscordApp {
                 messagesList.appendChild(noMessagesMessage);
             } else {
                 mensajes.forEach((mensaje) => {
+                    console.log(mensaje)
                     const messageContainer = document.createElement('div');
                     messageContainer.classList.add('message-container');
 
@@ -317,6 +318,14 @@ class DiscordApp {
                     messageText.textContent = mensaje.mensaje;
                     messageContent.appendChild(messageText);
 
+                    const editButton = document.createElement('button');
+                    editButton.classList.add('edit-button');
+                    editButton.textContent = 'Editar';
+                    editButton.addEventListener('click', () => {
+                        this.abrirCampoEdicion(messageContent, mensaje.idchat, mensaje.mensaje); // Pasa messageContent como parámetro
+                    });
+                    messageContent.appendChild(editButton);
+
                     messageContainer.appendChild(messageContent);
                     messagesList.appendChild(messageContainer);
                 });
@@ -329,6 +338,48 @@ class DiscordApp {
             console.error('Error al cargar mensajes del canal:', error);
         }
     }
+    abrirCampoEdicion(messageContent, idMensaje, contenido) { // Recibe messageContent como parámetro
+        const editInput = document.createElement('input');
+        editInput.type = 'text';
+        editInput.value = contenido;
+    
+        const saveButton = document.createElement('button');
+        saveButton.textContent = 'Guardar';
+        saveButton.addEventListener('click', () => {
+            this.guardarEdicionMensaje(idMensaje, editInput.value);
+        });
+    
+        messageContent.innerHTML = ''; // Limpia el contenido anterior del mensaje
+        messageContent.appendChild(editInput);
+        messageContent.appendChild(saveButton);
+    }
+    async guardarEdicionMensaje(idMensaje, nuevoContenido) {
+        const idUsuario = localStorage.getItem('idUsuario');
+        const idServidor = this.selectedServerId;
+        const idCanal=this.selectedChannelId
+    
+    try {
+        const response = await fetch(`${BASE_URL}/users/servers/${idUsuario}/canales/${idCanal}/messages/${idMensaje}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                nuevo_mensaje: nuevoContenido,
+            }),
+        });
+
+        if (response.ok) {
+            console.log('Mensaje editado correctamente');
+            // Actualiza los mensajes del canal después de editar
+            this.cargarMensajesCanal(this.selectedChannelId);
+        } else {
+            console.error('Error al editar el mensaje');
+        }
+    } catch (error) {
+        console.error('Error al editar el mensaje:', error);
+    }
+}
 
     
     async enviarMensaje(idUsuario, idServidor, idCanal, mensaje) {
