@@ -264,80 +264,85 @@ class DiscordApp {
         }
     
         
-    async cargarMensajesCanal(idCanal) {
-        try {
-            const response = await fetch(`${BASE_URL}/canal/${idCanal}`);
-            if (!response.ok) {
-                throw new Error('Error al obtener los mensajes del canal');
-            }
-            const mensajes = await response.json();
-
-            // Ordenar los mensajes por fecha de manera ascendente (más antiguo a más nuevo)
-            mensajes.sort((a, b) => new Date(a.fecha_hora) - new Date(b.fecha_hora));
-
-            // Limpiar la lista de mensajes
-            const messagesList = document.getElementById('messagesList');
-            messagesList.innerHTML = '';
-
-            if (mensajes.length === 0) {
-                const noMessagesMessage = document.createElement('div');
-                noMessagesMessage.textContent = 'No hay mensajes en este canal';
-                messagesList.appendChild(noMessagesMessage);
-            } else {
-                mensajes.forEach((mensaje) => {
-                    console.log(mensaje)
-                    const messageContainer = document.createElement('div');
-                    messageContainer.classList.add('message-container');
-
-                    // Agregar la imagen del usuario o la imagen predeterminada
-                    const userImage = document.createElement('img');
-                    userImage.classList.add('user-image');
-                    userImage.alt = 'Imagen del usuario';
-
-                    userImage.src = mensaje.imagen ? mensaje.imagen : 'imagen_predeterminada.png';
-                    messageContainer.appendChild(userImage);
-
-                    const messageContent = document.createElement('div');
-                    messageContent.classList.add('message-content');
-
-                    // Agregar el nombre del usuario
-                    const userName = document.createElement('div');
-                    userName.classList.add('user-name');
-                    userName.textContent = mensaje.usuario;
-                    messageContent.appendChild(userName);
-
-                    // Agregar la fecha y hora
-                    const messageDateTime = document.createElement('div');
-                    messageDateTime.classList.add('message-datetime');
-                    messageDateTime.textContent = mensaje.fecha_hora;
-                    messageContent.appendChild(messageDateTime);
-
-                    // Agregar el contenido del mensaje
-                    const messageText = document.createElement('div');
-                    messageText.classList.add('message-text');
-                    messageText.textContent = mensaje.mensaje;
-                    messageContent.appendChild(messageText);
-
-                    const editButton = document.createElement('button');
-                    editButton.classList.add('edit-button');
-                    editButton.textContent = 'Editar';
-                    editButton.addEventListener('click', () => {
-                        this.abrirCampoEdicion(messageContent, mensaje.idchat, mensaje.mensaje); // Pasa messageContent como parámetro
+        async cargarMensajesCanal(idCanal) {
+            try {
+                const idUsuario = localStorage.getItem('idUsuario'); // Obtener el idUsuario logeado
+                const response = await fetch(`${BASE_URL}/canal/${idCanal}`);
+                
+                if (!response.ok) {
+                    throw new Error('Error al obtener los mensajes del canal');
+                }
+                
+                const mensajes = await response.json();
+        
+                // Ordenar los mensajes por fecha de manera ascendente (más antiguo a más nuevo)
+                mensajes.sort((a, b) => new Date(a.fecha_hora) - new Date(b.fecha_hora));
+        
+                // Limpiar la lista de mensajes
+                const messagesList = document.getElementById('messagesList');
+                messagesList.innerHTML = '';
+        
+                if (mensajes.length === 0) {
+                    const noMessagesMessage = document.createElement('div');
+                    noMessagesMessage.textContent = 'No hay mensajes en este canal';
+                    messagesList.appendChild(noMessagesMessage);
+                } else {
+                    mensajes.forEach((mensaje) => {
+                        const messageContainer = document.createElement('div');
+                        messageContainer.classList.add('message-container');
+        
+                        // Agregar la imagen del usuario o la imagen predeterminada
+                        const userImage = document.createElement('img');
+                        userImage.classList.add('user-image');
+                        userImage.alt = 'Imagen del usuario';
+                        userImage.src = mensaje.imagen ? mensaje.imagen : 'imagen_predeterminada.png';
+                        messageContainer.appendChild(userImage);
+        
+                        const messageContent = document.createElement('div');
+                        messageContent.classList.add('message-content');
+        
+                        // Agregar el nombre del usuario
+                        const userName = document.createElement('div');
+                        userName.classList.add('user-name');
+                        userName.textContent = mensaje.usuario;
+                        messageContent.appendChild(userName);
+        
+                        // Agregar la fecha y hora
+                        const messageDateTime = document.createElement('div');
+                        messageDateTime.classList.add('message-datetime');
+                        messageDateTime.textContent = mensaje.fecha_hora;
+                        messageContent.appendChild(messageDateTime);
+        
+                        // Agregar el contenido del mensaje
+                        const messageText = document.createElement('div');
+                        messageText.classList.add('message-text');
+                        messageText.textContent = mensaje.mensaje;
+                        messageContent.appendChild(messageText);
+        
+                        // Agregar el botón de editar solo si el idUsuario coincide con el id_usuario del mensaje
+                        if (mensaje.id_usuario === parseInt(idUsuario)) {
+                            const editButton = document.createElement('button');
+                            editButton.classList.add('edit-button');
+                            editButton.textContent = 'Editar';
+                            editButton.addEventListener('click', () => {
+                                this.abrirCampoEdicion(messageContent, mensaje.idchat, mensaje.mensaje);
+                            });
+                            messageContent.appendChild(editButton);
+                        }
+        
+                        messageContainer.appendChild(messageContent);
+                        messagesList.appendChild(messageContainer);
                     });
-                    messageContent.appendChild(editButton);
-
-                    messageContainer.appendChild(messageContent);
-                    messagesList.appendChild(messageContainer);
-                });
+                }
+        
+                // Mostrar la columna sidebar2 con los mensajes del canal
+                const sidebar2 = document.querySelector('.sidebar2');
+                sidebar2.style.display = 'block';
+            } catch (error) {
+                console.error('Error al cargar mensajes del canal:', error);
             }
-
-            // Mostrar la columna sidebar2 con los mensajes del canal
-            const sidebar2 = document.querySelector('.sidebar2');
-            sidebar2.style.display = 'block';
-        } catch (error) {
-            console.error('Error al cargar mensajes del canal:', error);
         }
-    }
+        
     abrirCampoEdicion(messageContent, idMensaje, contenido) { // Recibe messageContent como parámetro
         const editInput = document.createElement('input');
         editInput.type = 'text';
