@@ -28,6 +28,10 @@ class DiscordApp {
         });
 
           this.searchButton.addEventListener('click', () => {
+            const sidebar2 = document.querySelector('.sidebar2');
+            const sidebar3=document.querySelector('.sidebar3')
+            sidebar2.style.display = 'none';
+            sidebar3.style.display='none';
             this.openSearchModal();
         });
         this.closeSearchModalButton.addEventListener('click', () => {
@@ -358,6 +362,7 @@ class DiscordApp {
         messageContent.appendChild(editInput);
         messageContent.appendChild(saveButton);
     }
+
     async guardarEdicionMensaje(idMensaje, nuevoContenido) {
         const idUsuario = localStorage.getItem('idUsuario');
         const idServidor = this.selectedServerId;
@@ -501,70 +506,68 @@ class DiscordApp {
     }
 
     mostrarServidores(servidores) {
-        // Limpiar el contenido del contenedor de botones de servidores antes de mostrar los nuevos
         const serverButtonsContainer = document.querySelector('.server-buttons-container');
         serverButtonsContainer.innerHTML = '';
     
-        // Recorrer la matriz de servidores y mostrar cada servidor en un botón
         servidores.forEach((servidorInfo) => {
             const [idServidor, nombre, descripcion] = servidorInfo;
     
-            // Crear un botón para cada servidor con el nombre y el atributo data-id
             const button = document.createElement('button');
             button.classList.add('sv-item');
             button.textContent = nombre;
             button.setAttribute('data-id', idServidor);
             serverButtonsContainer.appendChild(button);
     
-            // Agregar evento de clic a cada botón de servidor
             button.addEventListener('click', () => {
-                // Remover la clase "selected" de todos los botones de servidores
                 serverButtonsContainer.querySelectorAll('.sv-item').forEach((svButton) => {
                     svButton.classList.remove('selected');
                 });
     
-                // Actualizar la tarjeta del usuario
-                const userImage = document.getElementById('userImage');
-                const userName = document.getElementById('userName');
-    
-                // Obtener la imagen y el nombre del usuario desde localStorage
                 const userImageURL = localStorage.getItem('imagenUsuarioURL');
                 const userNameText = localStorage.getItem('nombreUsuario');
-    
-                // Actualizar la imagen y el nombre en la tarjeta
+                const userImage = document.getElementById('userImage');
+                const userName = document.getElementById('userName');
+                
                 if (userImageURL !== 'null') {
                     userImage.src = userImageURL;
                 } else {
                     userImage.src = 'imagen_predeterminada.png';
                 }        
+                
                 userName.textContent = userNameText ? userNameText : 'Nombre de Usuario';
-
-                    
-    
-                // Agregar la clase "selected" al botón del servidor seleccionado
                 button.classList.add('selected');
-    
-                // Cargar los canales del servidor seleccionado
+                
                 this.cargarCanalesServidor(idServidor);
             });
         });
     
-        // Obtener la imagen y el nombre del usuario desde localStorage
+        const userCard = document.querySelector('.user-card');
+        userCard.addEventListener('click', () => {
+            this.editarDatosUsuario();
+        });
+        userCard.style.cursor = 'pointer';
+    
         const userImageURL = localStorage.getItem('imagenUsuarioURL');
         const userNameText = localStorage.getItem('nombreUsuario');
-    
-        // Actualizar la imagen y el nombre en la tarjeta
         const userImage = document.getElementById('userImage');
         const userName = document.getElementById('userName');
+        
         if (userImageURL !== 'null') {
             userImage.src = userImageURL;
         } else {
             userImage.src = 'imagen_predeterminada.png';
         }        
+        
         userName.textContent = userNameText ? userNameText : 'Nombre de Usuario';
     }
     
-    
+     editarDatosUsuario() {
+        // Aquí puedes implementar la lógica para editar los datos del usuario
+        // Por ejemplo, abrir un modal de edición o redirigir a una página de edición
+        console.log('Editar datos de usuario');
+        window.location.href = "./editarUser.html"; // Redireccionar a la página de servidores
+
+    }
      actualizarServidores() {
         const idUsuario = localStorage.getItem('idUsuario');
         console.log("ID del usuario:", idUsuario);

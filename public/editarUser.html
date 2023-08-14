@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/editarUser.css">
+    <title>User Profile</title>
+</head>
+<body>
+    <div class="user-profile">
+        <div class="profile-image">
+            <img id="userImage" src="" alt="User Image">
+            <button class="edit-button" id="editImageButton">Cambiar Imagen de Perfil</button>
+        </div>
+        <div class="profile-info">
+            <div class="info-row">
+                <div class="info-label">Nombre de Usuario:</div>
+                <div class="info-value" id="userName"></div>
+                <button class="edit-button" id="editUserName">Editar</button>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Nombre:</div>
+                <div class="info-value" id="userFullName"></div>
+                <button class="edit-button" id="editFullName">Editar</button>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Email:</div>
+                <div class="info-value" id="userEmail"></div>
+                <button class="edit-button" id="editEmail">Editar</button>
+            </div>
+            <div class="info-row">
+                <div class="info-label">Contraseña:</div>
+                <button class="edit-button" id="changePassword">Cambiar Contraseña</button>
+            </div>
+            <div class="info-row">
+                <button class="edit-button" id="volver">Volver</button>
+            </div>
+                    
+            <!-- El modal -->
+            <div id="imageModal" class="modal"style="display: none;">
+                <div class="modal-content">
+                    <span class="close" id="closeModal">&times;</span>
+                    <h2>Cambiar Imagen de Perfil</h2>
+                    <input type="file" id="newImageInput">
+                    <button id="updateImageButton">Actualizar Imagen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="js/editarUser.js"></script>
+</body>
+    
+</html>
