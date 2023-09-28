@@ -31,9 +31,11 @@ document.addEventListener('DOMContentLoaded', () => {
           });
 
 
-          if (response.ok) {
+          if (response.status===201) {
               const responseData = await response.json();
               console.log('Usuario registrado exitosamente:', responseData);
+              alert("Registro Exitosox",responseData);
+
               window.location.href = "./index.html"; // Redireccionar a la página de servidores
 
               // Agrega aquí la lógica para redirigir o mostrar un mensaje de éxito
