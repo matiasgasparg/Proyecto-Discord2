@@ -152,7 +152,7 @@ class DiscordApp {
 
     async buscarServidoresPorNombre(nombre) {
         try {
-            const response = await fetch(`${BASE_URL}/servidores/${nombre}`);
+            const response = await fetch(`${BASE_URL}/servers/${nombre}`);
             if (!response.ok) {
                 throw new Error('No se ha encontrado el servidor');
             }
@@ -189,7 +189,7 @@ class DiscordApp {
             console.error("Error al buscar el servidor:", error);
             // En caso de error, obtener todos los servidores
             try {
-                const responseAll = await fetch(`${BASE_URL}/servidores`);
+                const responseAll = await fetch(`${BASE_URL}/servers`);
                 if (!responseAll.ok) {
                     throw new Error('Error al obtener todos los servidores');
                 }
@@ -236,7 +236,7 @@ class DiscordApp {
             
             if (idUsuario && idServidor) {
                 try {
-                    const url = `${BASE_URL}/users/servidores/${idUsuario}/${idServidor}`;
+                    const url = `${BASE_URL}/servers/${idUsuario}/${idServidor}`;
                     
                     const response = await fetch(url, {
                         method: 'POST',
@@ -271,7 +271,7 @@ class DiscordApp {
         async cargarMensajesCanal(idCanal) {
             try {
                 const idUsuario = localStorage.getItem('idUsuario'); // Obtener el idUsuario logeado
-                const response = await fetch(`${BASE_URL}/canal/${idCanal}`);
+                const response = await fetch(`${BASE_URL}/channels/${idCanal}`);
                 
                 if (!response.ok) {
                     throw new Error('Error al obtener los mensajes del canal');
@@ -369,7 +369,7 @@ class DiscordApp {
         const idCanal=this.selectedChannelId
     
     try {
-        const response = await fetch(`${BASE_URL}/users/servers/${idUsuario}/canales/${idCanal}/messages/${idMensaje}`, {
+        const response = await fetch(`${BASE_URL}/messages/${idUsuario}/${idCanal}/${idMensaje}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -395,7 +395,7 @@ class DiscordApp {
     async enviarMensaje(idUsuario, idServidor, idCanal, mensaje) {
         if (idUsuario && idServidor && idCanal) {
             try {
-                const url = `${BASE_URL}/users/servers/${idUsuario}/${idServidor}/canales/${idCanal}/messages`;
+                const url = `${BASE_URL}/messages/${idUsuario}/${idServidor}/${idCanal}`;
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: {
@@ -425,7 +425,7 @@ class DiscordApp {
 
     async crearServidor(serverName, serverDescription) {
         const idUsuario = localStorage.getItem('idUsuario');
-        const url = `${BASE_URL}/users/${idUsuario}/servers`;
+        const url = `${BASE_URL}/servers/${idUsuario}`;
 
         try {
             const response = await fetch(url, {
@@ -453,7 +453,7 @@ class DiscordApp {
 
     async obtenerServidoresPorUsuario(idUsuario) {
         
-        const response = await fetch(`${BASE_URL}/users/servers/${idUsuario}`);
+        const response = await fetch(`${BASE_URL}/servers/${idUsuario}`);
         console.log(idUsuario)
         if (!response.ok) {
             throw new Error('Error al obtener los servidores del usuario');
@@ -466,7 +466,7 @@ class DiscordApp {
     
         if (idServidor) {
             try {
-                const url = `${BASE_URL}/users/${idUsuario}/servidores/${idServidor}/canales`;
+                const url = `${BASE_URL}/channels/${idUsuario}/${idServidor}`;
                 const response = await fetch(url, {
                     method: 'POST',
                     headers: {
@@ -493,7 +493,7 @@ class DiscordApp {
     
 
     async obtenerCanalesPorServidor(idUsuario, idServidor) {
-        const response = await fetch(`${BASE_URL}/users/servers/${idUsuario}/${idServidor}`);
+        const response = await fetch(`${BASE_URL}/servers/${idUsuario}/${idServidor}`);
         if (!response.ok) {
             if (response.status === 404) {
                 // Retornar un array vacío en caso de error 404 (no se encontraron canales)
@@ -671,7 +671,7 @@ class DiscordApp {
         }
     }
     
-    // Función para mostrar el modal de creación de canal
+    // Función para mostrar el modal de creación de canalc
     showCreateChannelModal() {
         const createChannelModal = document.getElementById('createChannelModal');
         createChannelModal.style.display = 'block';

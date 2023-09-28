@@ -21,7 +21,18 @@ body {
     box-shadow: 0 15px 25px rgba(0,0,0,.6);
     border-radius: 10px;
   }
-  
+  .container {
+    display: flex;
+    justify-content: center; /* Centra horizontalmente en el eje X */
+    align-items: center; /* Centra verticalmente en el eje Y */
+    height: 100vh; /* Esto asegura que el contenedor ocupe toda la altura de la ventana */
+    background-color: #f0f0f0; /* Solo para que puedas ver el contenedor */
+  }
+
+  .centered-image {
+    max-width: 100%; /* Asegura que la imagen no sea más ancha que su contenedor */
+    max-height: 150%; /* Asegura que la imagen no sea más alta que su contenedor */
+  }
   .login-box h1 {
     margin: 0 0 30px;
     padding: 0;
