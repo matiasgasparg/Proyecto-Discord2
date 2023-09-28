@@ -81,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const formData = new FormData();
             formData.append('photo', newImage); // Utiliza 'photo' como clave para la imagen
     
-            const url = `${BASE_URL}/upload/${idUsuario}`;
+            const url = `${BASE_URL}/users/upload/${idUsuario}`;
             fetch(url, {
                 method: 'POST',
                 body: formData
