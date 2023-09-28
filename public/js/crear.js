@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       try {
-          const response = await fetch('https://matiasgasparg.pythonanywhere.com/users/create', {
+          const response = await fetch('http://127.0.0.1:5000/users/', {
               method: 'POST',
               headers: {
                   'Content-Type': 'application/json'
@@ -34,7 +34,9 @@ document.addEventListener('DOMContentLoaded', () => {
           if (response.status===201) {
               const responseData = await response.json();
               console.log('Usuario registrado exitosamente:', responseData);
-              window.location.href = "../index.html"; // Redireccionar a la página de servidores
+              alert("Registro Exitoso",responseData);
+
+              window.location.href = "./index.html"; // Redireccionar a la página de servidores
 
               // Agrega aquí la lógica para redirigir o mostrar un mensaje de éxito
           } else if(response.status===400) {
