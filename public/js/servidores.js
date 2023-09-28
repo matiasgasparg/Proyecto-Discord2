@@ -1,4 +1,4 @@
-const BASE_URL = "https://matiasgasparg.pythonanywhere.com"; // Cambiar esta dirección si es necesario
+const BASE_URL = "http://127.0.0.1:5000"; // Cambiar esta dirección si es necesario
 
 class DiscordApp {
     constructor() {
@@ -18,6 +18,23 @@ class DiscordApp {
         this.closeSearchModalButton=document.getElementById('closeSearchModalButton')
         this.searchServerForm = document.getElementById('searchServerForm');
 
+        const imagenUsuarioURL = localStorage.getItem('imagenUsuarioURL');
+        const nombreUsuario = localStorage.getItem('nombreUsuario');
+    
+        // Verificar si la imagen y el nombre del usuario están en el almacenamiento local
+        if (imagenUsuarioURL && nombreUsuario) {
+            const userImage = document.getElementById('userImage');
+            const userName = document.getElementById('userName');
+            if (!userImage=='null'){
+        
+                userImage.src = imagenUsuarioURL;
+            }
+            else{ 
+                userImage.src = 'imagen_predeterminada.png';
+            }
+            userName.textContent = nombreUsuario;
+        }
+    
         this.init();
     }
 
