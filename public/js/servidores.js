@@ -433,7 +433,7 @@ try {
     });
 
     if (response.ok) {
-        console.log('Mensaje editado correctamente');
+        alert('Mensaje Eliminado correctamente');
         // Actualiza los mensajes del canal después de editar
         this.cargarMensajesCanal(this.selectedChannelId);
     } else {
