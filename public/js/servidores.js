@@ -205,6 +205,8 @@ class DiscordApp {
         } catch (error) {
             console.error("Error al buscar el servidor:", error);
             // En caso de error, obtener todos los servidores
+            alert("No se encontro el servidor");
+
             try {
                 const responseAll = await fetch(`${BASE_URL}/servers`);
                 if (!responseAll.ok) {
@@ -266,6 +268,7 @@ class DiscordApp {
                     
                     if (response.status === 200) {
                         console.log(data.message); // Unión exitosa
+                        alert("Union Exitosa",data.message);
 
                         this.actualizarServidores(); // Llamar a actualizarServidores después de una unión exitosa
                         console.log('Actualizacion columna servidor') 
@@ -350,6 +353,16 @@ class DiscordApp {
                             });
                             messageContent.appendChild(editButton);
                         }
+                        if (mensaje.id_usuario===parseInt(idUsuario)){
+                            const elimButton=document.createElement('button');
+                            elimButton.classList.add('elim-button');
+                            elimButton.textContent='Eliminar';
+                            elimButton.addEventListener('click',()=>{
+                                this.eliminarMensaje(mensaje.idchat)
+                            })
+                            messageContent.appendChild(elimButton);
+
+                        }
         
                         messageContainer.appendChild(messageContent);
                         messagesList.appendChild(messageContainer);
@@ -407,6 +420,30 @@ class DiscordApp {
         console.error('Error al editar el mensaje:', error);
     }
 }
+async eliminarMensaje(idMensaje) {
+    const idUsuario = localStorage.getItem('idUsuario');
+    const idCanal=this.selectedChannelId
+
+try {
+    const response = await fetch(`${BASE_URL}/messages/${idUsuario}/${idCanal}/${idMensaje}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+        }
+    });
+
+    if (response.ok) {
+        console.log('Mensaje editado correctamente');
+        // Actualiza los mensajes del canal después de editar
+        this.cargarMensajesCanal(this.selectedChannelId);
+    } else {
+        console.error('Error al editar el mensaje');
+    }
+} catch (error) {
+    console.error('Error al editar el mensaje:', error);
+}
+}
+
 
     
     async enviarMensaje(idUsuario, idServidor, idCanal, mensaje) {
